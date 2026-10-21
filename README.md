@@ -1,1 +1,1 @@
-# Better-Millida-Launcher
+# BetterMillidaLauncher
