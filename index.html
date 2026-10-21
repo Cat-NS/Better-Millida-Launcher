@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="style.css">
+<title>Better Millida Launcher</title>
+</head>
+<body class="theme-purple">
+<div class="fx-bg" aria-hidden="true">
+    <span class="blob b1"></span>
+    <span class="blob b2"></span>
+    <span class="blob b3"></span>
+    <span class="scanlines"></span>
+</div>
+<canvas id="fx-particles" aria-hidden="true"></canvas>
+<div class="title-bar pywebview-drag-region">
+    <img src="icons/launchericon.png" class="tb-icon" alt="">
+    <div class="title-text">Better Millida</div>
+    <div class="window-controls">
+        <button id="btn-full" title="Fullscreen">⛶</button>
+        <button id="btn-min" class="min-btn">—</button>
+        <button id="btn-close" class="close-btn">✕</button>
+    </div>
+</div>
+
+<div class="app-container">
+    <div class="sidebar">
+        <div class="active-inst" id="active-inst-label">—</div>
+        <button data-tab="default"><img src="icons/main.png" alt=""><span data-i18n="nav_default">Главная</span></button>
+        <button data-tab="settings"><img src="icons/settings.png" alt=""><span data-i18n="nav_settings">Настройки</span></button>
+        <button data-tab="instances"><img src="icons/instances.png" alt=""><span data-i18n="nav_instances">Инстансы</span></button>
+        <button data-tab="servers"><img src="icons/servers.png" alt=""><span data-i18n="nav_servers">Серверы</span></button>
+        <button data-tab="github"><img src="icons/github.png" alt=""><span data-i18n="nav_github">Github</span></button>
+        <button data-tab="import"><img src="icons/millidaimport.png" alt=""><span data-i18n="nav_import">Импорт Millida</span></button>
+        <button data-tab="prism"><img src="icons/prismimport.png" alt=""><span data-i18n="nav_prism">Импорт Prism</span></button>
+        <button data-tab="about"><img src="icons/about.png" alt=""><span data-i18n="nav_about">О программе</span></button>
+    </div>
+
+    <div class="main-content">
+        <div id="tab-welcome" class="tab active">
+            <h1 class="center-text" data-i18n="welcome_title">Welcome to Better Millida Launcher</h1>
+            <div class="character-wrap">
+                <div class="character-glow"></div>
+                <img id="char-skin" class="character" src="" alt="skin">
+            </div>
+            <div class="columns">
+                <div class="panel"><h3 data-i18n="changelogs">Changelogs</h3><pre id="changelog-text"></pre></div>
+                <div class="panel"><h3 data-i18n="thanks">Special thanks</h3><pre id="thanks-text"></pre></div>
+            </div>
+        </div>
+
+        <div id="tab-default" class="tab">
+            <h1 data-i18n="nav_default">Главная</h1>
+            <div class="character-wrap small">
+                <div class="character-glow"></div>
+                <img id="char-skin-home" class="character" src="" alt="skin">
+            </div>
+            <div class="panel" style="max-width:680px;margin:0 auto">
+                <p id="home-info">...</p>
+                <div style="text-align:center;margin-top:14px">
+                    <button class="action-btn big" id="btn-play">
+                        <img src="icons/play.png" class="btn-icon" alt=""><span data-i18n="play">Играть</span>
+                    </button>
+                    <button class="action-btn ghost" id="btn-set-skin" data-i18n="set_skin">Сменить скин</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-settings" class="tab">
+            <h1 data-i18n="nav_settings">Настройки</h1>
+            <div class="panel" style="max-width:560px">
+                <h3 data-i18n="language">Язык</h3>
+                <select id="sel-lang"><option value="ru">Русский</option><option value="en">English</option></select>
+                <h3 data-i18n="theme">Тема</h3>
+                <select id="sel-theme">
+                    <option value="purple">Purple</option>
+                    <option value="millida">Millida Theme</option>
+                    <option value="dark">Dark</option>
+                    <option value="light">Light</option>
+                    <option value="green">Cyber Green</option>
+                </select>
+                <h3 data-i18n="nickname">Никнейм</h3>
+                <input id="inp-nick" type="text">
+                <h3 data-i18n="java_path">Путь к Java (пусто = авто)</h3>
+                <input id="inp-java" type="text" placeholder="java">
+                <h3 data-i18n="ram_gb">ОЗУ клиента (ГБ)</h3>
+                <input id="inp-ram-client" type="number" min="1" max="32" value="4">
+                <label class="checkbox-row"><input type="checkbox" id="chk-things"><span data-i18n="millida_things">Enable millida things</span></label>
+                <label class="checkbox-row"><input type="checkbox" id="chk-voice"><span data-i18n="voice_chat">Enable voice chat</span></label>
+                <label class="checkbox-row"><input type="checkbox" id="chk-things-lite"><span data-i18n="things_lite">Millida Things Lite — только патчи</span></label>
+
+                <h3 class="section-title" data-i18n="things_patches">Millida Things — патчи</h3>
+                <label class="checkbox-row"><input type="checkbox" id="chk-white-ip"><span data-i18n="white_ip_emulator">Enable White IP Emulator (Grey IP Patch)</span></label>
+                <p class="hint" data-i18n="white_ip_hint">Даёт друзьям твой белый IP, когда ты открываешь мир по сети — без ручного проброса.</p>
+                <label class="checkbox-row"><input type="checkbox" id="chk-port-emu"><span data-i18n="port_emulator">Enable Port Emulator</span></label>
+                <p class="hint" data-i18n="port_emu_hint">Автоматически пробрасывает порт игры через UPnP, когда мир открыт по сети.</p>
+                <label class="checkbox-row"><input type="checkbox" id="chk-elyby"><span data-i18n="elyby_skins">Ely.by Skin System (visual)</span></label>
+                <p class="hint" data-i18n="elyby_hint">Показывает скин с Ely.by по твоему нику. Также работает в Millida Things.</p>
+                <div class="row">
+                    <button class="action-btn ghost" id="btn-elyby" data-i18n="load_elyby_skin">Загрузить скин Ely.by</button>
+                    <button class="action-btn ghost" id="btn-net-refresh" data-i18n="refresh">Обновить</button>
+                </div>
+                <div id="net-info" class="net-info"></div>
+
+                <h3 class="section-title" data-i18n="servers_path">Серверы</h3>
+                <h3 data-i18n="default_server_path">Путь серверов по умолчанию</h3>
+                <div class="row">
+                    <input id="inp-server-path" type="text" placeholder="C:\Minecraft\Servers" style="flex:2">
+                    <button class="action-btn ghost" id="btn-server-path" title="Выбрать папку">📁</button>
+                </div>
+                <p class="hint" data-i18n="default_server_path_hint">Пусто = папка server_instances рядом с лаунчером. Меняется и у каждого сервера отдельно.</p>
+
+                <button class="action-btn" id="btn-save-settings" data-i18n="save">Сохранить</button>
+                <p id="settings-status"></p>
+            </div>
+        </div>
+
+        <div id="tab-instances" class="tab">
+            <h1 data-i18n="nav_instances">Инстансы</h1>
+            <div class="panel" style="max-width:880px">
+                <h3 data-i18n="create_instance">Создать инстанс</h3>
+                <input id="inp-inst-name" type="text" data-i18n-ph="instance_name" placeholder="Название">
+                <div class="row">
+                    <select id="sel-inst-loader">
+                        <option value="vanilla">Vanilla</option>
+                        <option value="paper">Paper</option>
+                        <option value="fabric">Fabric</option>
+                        <option value="quilt">Quilt</option>
+                        <option value="forge">Forge</option>
+                        <option value="neoforge">NeoForge</option>
+                    </select>
+                    <select id="sel-inst-vtype">
+                        <option value="release">Release</option>
+                        <option value="snapshot">Snapshot</option>
+                        <option value="old_beta">Old Beta</option>
+                        <option value="old_alpha">Old Alpha</option>
+                    </select>
+                    <select id="sel-inst-version"><option>...</option></select>
+                    <button class="action-btn" id="btn-create-inst" data-i18n="create">Создать</button>
+                </div>
+                <div id="inst-list" class="card-grid"></div>
+            </div>
+        </div>
+
+        <div id="tab-instance-detail" class="tab">
+            <button class="action-btn ghost" id="btn-inst-back">← <span data-i18n="back">Назад</span></button>
+            <h1 id="det-name">Instance</h1>
+            <div class="panel" style="max-width:900px">
+                <h3 data-i18n="instance_settings">Настройки инстанса</h3>
+                <div class="row">
+                    <select id="det-loader">
+                        <option value="vanilla">Vanilla</option>
+                        <option value="paper">Paper</option>
+                        <option value="fabric">Fabric</option>
+                        <option value="quilt">Quilt</option>
+                        <option value="forge">Forge</option>
+                        <option value="neoforge">NeoForge</option>
+                    </select>
+                    <select id="det-vtype">
+                        <option value="release">Release</option>
+                        <option value="snapshot">Snapshot</option>
+                        <option value="old_beta">Old Beta</option>
+                        <option value="old_alpha">Old Alpha</option>
+                    </select>
+                    <select id="det-version"><option>...</option></select>
+                    <button class="action-btn" id="btn-det-save" data-i18n="save">Сохранить</button>
+                </div>
+                <div class="row">
+                    <button class="action-btn" id="btn-det-install" data-i18n="download_install">Скачать</button>
+                    <button class="action-btn ghost" id="btn-det-activate" data-i18n="set_active">Активный</button>
+                    <button class="action-btn big" id="btn-det-launch">
+                        <img src="icons/play.png" class="btn-icon" alt=""><span data-i18n="play">Играть</span>
+                    </button>
+                </div>
+                <p id="det-status"></p>
+                <h3 style="margin-top:24px" data-i18n="mods">Моды</h3>
+                <input id="inp-mod-search" type="text" data-i18n-ph="modrinth_search_ph" placeholder="Поиск в Modrinth...">
+                <div class="row">
+                    <button class="action-btn" id="btn-mod-search" data-i18n="search">Найти</button>
+                    <button class="action-btn ghost" id="btn-det-install-mod" data-i18n="install_local_jar">Установить .jar</button>
+                </div>
+                <div id="modrinth-results" class="card-grid"></div>
+                <ul id="det-mods" style="margin-top:10px"></ul>
+                <h3 style="margin-top:24px" data-i18n="danger_zone">Опасная зона</h3>
+                <button class="action-btn danger" id="btn-det-delete" data-i18n="delete_instance">Удалить</button>
+            </div>
+        </div>
+
+        <div id="tab-servers" class="tab">
+            <h1 data-i18n="nav_servers">Серверы</h1>
+            <div class="panel" style="max-width:880px">
+                <h3 data-i18n="create_server">Создать сервер</h3>
+                <input id="inp-srv-name" type="text" placeholder="Название сервера">
+                <div class="row">
+                    <select id="sel-srv-core">
+                        <option value="paper">Paper</option>
+                        <option value="vanilla">Vanilla</option>
+                        <option value="fabric">Fabric</option>
+                        <option value="quilt">Quilt</option>
+                    </select>
+                    <select id="sel-srv-version"><option>...</option></select>
+                    <input id="inp-srv-ram" type="number" value="4" min="1" max="64" title="RAM (ГБ)" style="max-width:90px">
+                    <input id="inp-srv-port" type="number" value="25565" title="Порт" style="max-width:100px">
+                    <button class="action-btn" id="btn-create-srv" data-i18n="create">Создать</button>
+                </div>
+                <label class="checkbox-row"><input type="checkbox" id="chk-srv-pirate"><span data-i18n="pirate_mode">Пиратский режим (online-mode=false)</span></label>
+                <p class="hint">Если включены Port Emulator / White IP Emulator — порт сервера пробрасывается через UPnP при старте.</p>
+                <div id="srv-list" class="card-grid"></div>
+            </div>
+        </div>
+
+        <div id="tab-server-detail" class="tab">
+            <button class="action-btn ghost" id="btn-srv-back">← <span data-i18n="back">Назад</span></button>
+            <h1 id="srv-name">Server</h1>
+            <div class="srv-controls">
+                <button class="action-btn big" id="btn-srv-start">
+                    <img src="icons/play.png" class="btn-icon" alt=""><span data-i18n="start_server">Запустить</span>
+                </button>
+                <button class="action-btn danger" id="btn-srv-stop" data-i18n="stop_server">Остановить</button>
+                <button class="action-btn ghost" id="btn-srv-share" data-i18n="share_server">Поделиться</button>
+                <button class="action-btn ghost" id="btn-srv-np-open" data-i18n="open_port">Открыть порт</button>
+                <button class="action-btn ghost" id="btn-srv-np-close" data-i18n="close_port">Закрыть порт</button>
+                <span id="srv-status" style="margin-left:12px;font-size:12px;opacity:.8"></span>
+            </div>
+
+            <div class="srv-tabs">
+                <button class="srv-tab active" data-stab="console">Console</button>
+                <button class="srv-tab" data-stab="players" data-i18n="players">Игроки</button>
+                <button class="srv-tab" data-stab="settings" data-i18n="server_settings">Настройки</button>
+                <button class="srv-tab" data-stab="share" data-i18n="share">Шеринг</button>
+            </div>
+
+            <div id="srv-tab-console" class="srv-tab-content active">
+                <div id="console-out" class="console"></div>
+                <div class="console-input-row">
+                    <input id="console-cmd" type="text" placeholder="say hello / op Steve / give Steve diamond 64">
+                    <button class="action-btn" id="btn-send-cmd" data-i18n="send">Отправить</button>
+                </div>
+            </div>
+
+            <div id="srv-tab-players" class="srv-tab-content">
+                <h3 data-i18n="online_players">Онлайн</h3>
+                <ul id="players-online"></ul>
+                <h3 data-i18n="manage_player">Управление игроком</h3>
+                <input id="inp-manage-nick" type="text" placeholder="Ник">
+                <div class="row">
+                    <input id="inp-give-item" type="text" placeholder="minecraft:diamond" style="flex:2">
+                    <input id="inp-give-count" type="number" value="1" style="max-width:80px">
+                    <button class="action-btn" id="btn-give" data-i18n="give">Выдать</button>
+                </div>
+                <div class="row">
+                    <button class="action-btn" data-player-cmd="op" data-i18n="op">OP</button>
+                    <button class="action-btn" data-player-cmd="deop" data-i18n="deop">DEOP</button>
+                    <button class="action-btn" data-player-cmd="kick" data-i18n="kick">Kick</button>
+                    <button class="action-btn danger" data-player-cmd="ban" data-i18n="ban">Ban</button>
+                    <button class="action-btn ghost" data-player-cmd="whitelist_add" data-i18n="wl_add">+WL</button>
+                    <button class="action-btn ghost" data-player-cmd="whitelist_remove" data-i18n="wl_remove">-WL</button>
+                </div>
+                <div class="row">
+                    <select id="sel-gamemode">
+                        <option value="survival">survival</option>
+                        <option value="creative">creative</option>
+                        <option value="adventure">adventure</option>
+                        <option value="spectator">spectator</option>
+                    </select>
+                    <button class="action-btn" id="btn-set-gm" data-i18n="set_gamemode">Сменить режим</button>
+                </div>
+            </div>
+
+            <div id="srv-tab-settings" class="srv-tab-content">
+                <div class="panel" style="max-width:640px">
+                    <h3 data-i18n="server_settings">Настройки сервера</h3>
+                    <label class="checkbox-row"><input type="checkbox" id="srv-pirate"><span data-i18n="pirate_mode">Пиратский режим</span></label>
+                    <h3>MOTD</h3>
+                    <input id="srv-motd" type="text">
+                    <h3>Seed</h3>
+                    <input id="srv-seed" type="text">
+                    <h3>Порт</h3>
+                    <input id="srv-port" type="number">
+                    <h3>RAM (ГБ)</h3>
+                    <input id="srv-ram" type="number" min="1" max="64">
+                    <label class="checkbox-row"><input type="checkbox" id="srv-rcon"><span>Enable RCON</span></label>
+                    <h3>RCON Порт</h3>
+                    <input id="srv-rcon-port" type="number" value="25575">
+                    <h3>RCON Пароль</h3>
+                    <input id="srv-rcon-pass" type="text">
+                    <h3 data-i18n="server_path">Путь сервера</h3>
+                    <div class="row">
+                        <input id="srv-path" type="text" style="flex:2" placeholder="папка, где лежит этот сервер">
+                        <button class="action-btn ghost" id="btn-srv-path" title="Выбрать папку">📁</button>
+                    </div>
+                    <p class="hint" id="srv-path-hint"></p>
+                    <button class="action-btn" id="btn-srv-save" data-i18n="save">Сохранить</button>
+                    <p id="srv-settings-status"></p>
+                </div>
+            </div>
+
+            <div id="srv-tab-share" class="srv-tab-content">
+                <div class="panel" style="max-width:640px">
+                    <h3 data-i18n="share_host">Как хост</h3>
+                    <p data-i18n="share_host_desc">Нажмите — лаунчер откроет HTTP-эндпоинт. Передайте IP друзьям.</p>
+                    <button class="action-btn" id="btn-start-share" data-i18n="start_share">Начать шеринг</button>
+                    <p id="share-status"></p>
+                    <div id="srv-share-addr" class="share-addr"></div>
+                    <hr style="margin:20px 0;border-color:var(--panel-border)">
+                    <h3 data-i18n="share_join">Подключиться к другу</h3>
+                    <div class="row">
+                        <input id="inp-share-ip" type="text" placeholder="192.168.1.100" style="flex:2">
+                        <button class="action-btn" id="btn-join-share" data-i18n="connect">Подключиться</button>
+                    </div>
+                    <div id="share-info"></div>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top:20px">
+                <button class="action-btn danger" id="btn-srv-delete" data-i18n="delete_server">Удалить сервер</button>
+            </div>
+        </div>
+
+        <div id="tab-github" class="tab">
+            <h1 data-i18n="nav_github">Github</h1>
+            <div id="gh-update-banner" class="update-banner hidden">
+                <span id="gh-update-text"></span>
+                <button class="action-btn small" id="btn-gh-update" data-i18n="download">Скачать</button>
+                <button class="action-btn ghost small" id="btn-gh-update-dismiss">✕</button>
+            </div>
+            <div class="panel gh-panel">
+                <div class="gh-head">
+                    <img id="gh-avatar" class="gh-avatar" alt="" style="display:none">
+                    <div class="gh-head-info">
+                        <a id="gh-name" class="gh-name" href="#" target="_blank">—</a>
+                        <p id="gh-desc" class="gh-desc"></p>
+                        <div class="gh-badges">
+                            <span class="gh-badge" id="gh-version">v—</span>
+                            <span class="gh-badge" id="gh-branch">—</span>
+                            <span class="gh-badge" id="gh-license">—</span>
+                            <span class="gh-badge" id="gh-language">—</span>
+                        </div>
+                    </div>
+                    <div class="gh-stats">
+                        <div class="gh-stat"><b id="gh-stars">0</b><span data-i18n="gh_stars">Звёзды</span></div>
+                        <div class="gh-stat"><b id="gh-forks">0</b><span data-i18n="gh_forks">Форки</span></div>
+                        <div class="gh-stat"><b id="gh-issues">0</b><span data-i18n="gh_issues">Issues</span></div>
+                        <div class="gh-stat"><b id="gh-commits">0</b><span data-i18n="gh_commits">Коммиты</span></div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:12px">
+                    <button class="action-btn" id="btn-gh-refresh" data-i18n="refresh">Обновить</button>
+                    <button class="action-btn ghost" id="btn-gh-open" data-i18n="gh_open_repo">Открыть репозиторий</button>
+                    <button class="action-btn ghost" id="btn-gh-check" data-i18n="gh_check_update">Проверить обновления</button>
+                </div>
+                <p id="gh-status" class="hint"></p>
+            </div>
+
+            <div class="gh-grid">
+                <div class="panel">
+                    <h3 data-i18n="gh_releases">Релизы</h3>
+                    <div id="gh-releases" class="gh-list"></div>
+                </div>
+                <div class="panel">
+                    <h3 data-i18n="gh_commits_title">Последние коммиты</h3>
+                    <div id="gh-commits" class="gh-list"></div>
+                </div>
+            </div>
+
+            <div class="gh-grid">
+                <div class="panel">
+                    <h3 data-i18n="gh_contributors">Контрибьюторы</h3>
+                    <div id="gh-contributors" class="gh-list"></div>
+                </div>
+                <div class="panel">
+                    <h3 data-i18n="gh_files">Файлы репозитория</h3>
+                    <div id="gh-files" class="gh-list"></div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3 data-i18n="gh_languages">Языки</h3>
+                <div id="gh-langs" class="gh-langs"></div>
+                <h3 style="margin-top:18px" data-i18n="gh_readme">README</h3>
+                <pre id="gh-readme" class="gh-readme"></pre>
+            </div>
+        </div>
+
+        <div id="tab-import" class="tab">
+            <h1 data-i18n="nav_import">Импорт из Millida</h1>
+            <div class="panel">
+                <p data-i18n="import_desc">Выберите папку Millida Launcher</p>
+                <button class="action-btn" id="btn-import" data-i18n="select_folder">Выбрать</button>
+                <p id="import-status"></p>
+            </div>
+        </div>
+
+        <div id="tab-prism" class="tab">
+            <h1 data-i18n="nav_prism">Импорт из Prism</h1>
+            <div class="panel" style="max-width:680px">
+                <p data-i18n="prism_desc">Выберите папку <b>instances</b> из Prism Launcher.</p>
+                <pre class="path-hint">%APPDATA%\PrismLauncher\instances</pre>
+                <button class="action-btn" id="btn-import-prism" data-i18n="select_folder">Выбрать</button>
+                <p id="prism-status"></p>
+                <ul id="prism-result"></ul>
+            </div>
+        </div>
+
+        <div id="tab-about" class="tab">
+            <h1 data-i18n="nav_about">О программе</h1>
+            <div class="panel">
+                <p>Better Millida Launcher v4.1</p>
+                <p>Made by <b>Neco</b></p>
+                <p>Python + PyWebView + C# Millida Things</p>
+                <p class="hint">Millida Things Lite • White IP Emulator • Port Emulator • Ely.by</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toasts"></div>
+
+<div id="progress-box" class="progress-box hidden">
+    <div class="progress-label" id="progress-label">...</div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-detail" id="progress-detail"></div>
+</div>
+
+<div id="ram-modal" class="modal">
+    <div class="modal-content">
+        <h2 style="color:#ff5555">⚠ <span data-i18n="attention">ВНИМАНИЕ</span> ⚠</h2>
+        <p id="ram-warning-text" style="white-space:pre-wrap"></p>
+        <button onclick="closeModal()" data-i18n="ok">OK</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
